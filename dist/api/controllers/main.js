@@ -28,11 +28,22 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.login = login;
 const dashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.headers);
-    const luckyNumber = Math.floor(Math.random() * 100);
-    res.status(200).json({
-        message: `Hello john Doe`,
-        secret: `Here is your authorization data, your lucky number is ${luckyNumber}`,
-    });
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new custom_error_1.CustomAPIError("No token provided", 401);
+    }
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        console.log(decoded.username);
+        const luckyNumber = Math.floor(Math.random() * 100);
+        res.status(200).json({
+            msg: `Hello ${decoded.username}`,
+            secret: `Here is your authorization data, your lucky number is ${luckyNumber}`,
+        });
+    }
+    catch (error) {
+        throw new custom_error_1.CustomAPIError("No authorized to access this route", 401);
+    }
 });
 exports.dashboard = dashboard;
