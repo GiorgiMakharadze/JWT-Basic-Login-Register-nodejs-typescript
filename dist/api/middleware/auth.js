@@ -14,11 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authentication = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const custom_error_1 = require("../errors/custom-error");
+const unauthenticated_1 = require("../errors/unauthenticated");
 const authentication = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        throw new custom_error_1.CustomAPIError("No token provided", 401);
+        throw new unauthenticated_1.Unauthenticated("No token provided");
     }
     const token = authHeader.split(" ")[1];
     try {
@@ -28,7 +28,7 @@ const authentication = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         next();
     }
     catch (error) {
-        throw new custom_error_1.CustomAPIError("No authorized to access this route", 401);
+        throw new unauthenticated_1.Unauthenticated("No authorized to access this route");
     }
 });
 exports.authentication = authentication;

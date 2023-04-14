@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { CustomAPIError } from "../errors/custom-error";
-
-import { DecodedToken } from "../../types/decodedTokenTypes";
 import { RequestWithUser } from "../../types/decodedTokenTypes";
+import { BadRequest } from "../errors/bad-request";
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    throw new CustomAPIError("Please provide email and password", 400);
+    throw new BadRequest("Please provide email and password");
   }
 
   const id = new Date().getDate();
@@ -24,8 +23,6 @@ export const dashboard = async (req: RequestWithUser, res: Response) => {
   if (!req.user) {
     throw new CustomAPIError("User not authorized", 401);
   }
-
-  console.log(req.user);
 
   const luckyNumber = Math.floor(Math.random() * 100);
   res.status(200).json({

@@ -15,10 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.dashboard = exports.login = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const custom_error_1 = require("../errors/custom-error");
+const bad_request_1 = require("../errors/bad-request");
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
     if (!username || !password) {
-        throw new custom_error_1.CustomAPIError("Please provide email and password", 400);
+        throw new bad_request_1.BadRequest("Please provide email and password");
     }
     const id = new Date().getDate();
     const token = jsonwebtoken_1.default.sign({ id, username }, process.env.JWT_SECRET, {
@@ -31,7 +32,6 @@ const dashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user) {
         throw new custom_error_1.CustomAPIError("User not authorized", 401);
     }
-    console.log(req.user);
     const luckyNumber = Math.floor(Math.random() * 100);
     res.status(200).json({
         msg: `Hello ${req.user.username}`,
