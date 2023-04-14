@@ -8,11 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const axios_1 = __importDefault(require("axios"));
 const formDOM = document.querySelector(".form");
 const usernameInputDOM = document.querySelector(".username-input");
 const passwordInputDOM = document.querySelector(".password-input");
@@ -27,7 +22,7 @@ formDOM.addEventListener("submit", (e) => __awaiter(void 0, void 0, void 0, func
     const username = usernameInputDOM.value;
     const password = passwordInputDOM.value;
     try {
-        const { data } = yield axios_1.default.post("/api/v1/login", { username, password });
+        const { data } = yield axios.post("/api/v1/login", { username, password });
         formAlertDOM.style.display = "block";
         formAlertDOM.textContent = data.msg;
         formAlertDOM.classList.add("text-success");
@@ -53,7 +48,7 @@ formDOM.addEventListener("submit", (e) => __awaiter(void 0, void 0, void 0, func
 btnDOM.addEventListener("click", () => __awaiter(void 0, void 0, void 0, function* () {
     const token = localStorage.getItem("token");
     try {
-        const { data } = yield axios_1.default.get("/api/v1/dashboard", {
+        const { data } = yield axios.get("/api/v1/dashboard", {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

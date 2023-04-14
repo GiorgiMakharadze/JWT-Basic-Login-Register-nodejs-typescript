@@ -1,16 +1,10 @@
-import axios from "axios";
-
-const formDOM = document.querySelector(".form") as HTMLFormElement;
-const usernameInputDOM = document.querySelector(
-  ".username-input"
-) as HTMLInputElement;
-const passwordInputDOM = document.querySelector(
-  ".password-input"
-) as HTMLInputElement;
-const formAlertDOM = document.querySelector(".form-alert") as HTMLDivElement;
-const resultDOM = document.querySelector(".result") as HTMLDivElement;
-const btnDOM = document.querySelector("#data") as HTMLButtonElement;
-const tokenDOM = document.querySelector(".token") as HTMLDivElement;
+const formDOM = document.querySelector(".form");
+const usernameInputDOM = document.querySelector(".username-input");
+const passwordInputDOM = document.querySelector(".password-input");
+const formAlertDOM = document.querySelector(".form-alert");
+const resultDOM = document.querySelector(".result");
+const btnDOM = document.querySelector("#data");
+const tokenDOM = document.querySelector(".token");
 
 formDOM.addEventListener("submit", async (e) => {
   formAlertDOM.classList.remove("text-success");
@@ -21,10 +15,7 @@ formDOM.addEventListener("submit", async (e) => {
   const password = passwordInputDOM.value;
 
   try {
-    const { data } = await axios.post<{ msg: string; token: string }>(
-      "/api/v1/login",
-      { username, password }
-    );
+    const { data } = await axios.post("/api/v1/login", { username, password });
 
     formAlertDOM.style.display = "block";
     formAlertDOM.textContent = data.msg;
@@ -37,7 +28,7 @@ formDOM.addEventListener("submit", async (e) => {
     resultDOM.innerHTML = "";
     tokenDOM.textContent = "token present";
     tokenDOM.classList.add("text-success");
-  } catch (error: Error | any) {
+  } catch (error) {
     formAlertDOM.style.display = "block";
     formAlertDOM.textContent = error.response.data.msg;
     localStorage.removeItem("token");
@@ -53,18 +44,15 @@ formDOM.addEventListener("submit", async (e) => {
 btnDOM.addEventListener("click", async () => {
   const token = localStorage.getItem("token");
   try {
-    const { data } = await axios.get<{ msg: string; secret: string }>(
-      "/api/v1/dashboard",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const { data } = await axios.get("/api/v1/dashboard", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     resultDOM.innerHTML = `<h5>${data.msg}</h5><p>${data.secret}</p>`;
 
     data.secret;
-  } catch (error: Error | any) {
+  } catch (error) {
     localStorage.removeItem("token");
     resultDOM.innerHTML = `<p>${error.response.data.msg}</p>`;
   }
